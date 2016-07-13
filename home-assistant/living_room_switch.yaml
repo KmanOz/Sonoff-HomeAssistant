@@ -1,0 +1,9 @@
+switch:
+  platform: mqtt
+  name: "Living Room"
+  state_topic: "home/sonoff/living_room/1/stat"
+  command_topic: "home/sonoff/living_room/1"
+  qos: 1
+  payload_on: "on"
+  payload_off: "off"
+  retain: true
