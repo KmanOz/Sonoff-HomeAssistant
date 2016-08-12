@@ -8,15 +8,15 @@ This firmware is very basic but gets the job done. There is no RTC, no OTA firmw
 
 Even though I have called the project Sonoff-HomeAssistant, the switch could be used for many of the other home automation systems that uses a Mosquitto broker. In saying that, Im not sure why you would want to use anything else other than [Home Assistant](https://home-assistant.io/) :D It's just awesome!
 
-Speaking of Home Assistant, I have included a snippet of how to setup the [switch](https://home-assistant.io/components/switch.mqtt/) component in configuration.yaml as well.
+Speaking of Home Assistant, I have included a snippet of how to setup the [switch](https://home-assistant.io/components/switch.mqtt/) component in configuration.yaml and if you have installed Version 1.0t the [sensor](https://home-assistant.io/components/sensor.mqtt/) component as well.
 
-And finally, I did this to get begginers up and running quickly with HomeAssistant and Sonoff. I hope it helps :D
+And finally, I did this to help beginners get up and running quickly with HomeAssistant and Sonoff.
 
 # Installation
 
 ## 1. Clone the Repository
 
-Clone the **Sonoff-HomeAssistant** repository to your local machine.
+Clone the **Sonoff-HomeAssistant** repository to your local machine. Copy the required version to your Arduino directory.
 
 ``` bash
 $ git clone https://github.com/KmanOz/Sonoff-HomeAssistant
@@ -73,6 +73,23 @@ switch:
 ```
 Assuming you make no changes to the topic in the code, you should be able to test the switch and be happy that you now have control using Home Assistant.
 
+If you've installed Version 1.0t, you can also setup sensors in HomeAssistant to display both Temperature & Humidity. Modify your configuraation.yaml and add the following.
+
+```bash
+- platform: mqtt
+  name: "Living Room Temp"
+  state_topic: "home/sonoff/living_room/1/temp"
+  qos: 0
+  unit_of_measurement: "°C"
+  value_template: "{{ value_json.Temp }}"
+- platform: mqtt
+  name: "Living Room Humidity"
+  state_topic: "home/sonoff/living_room/1/temp"
+  qos: 0
+  unit_of_measurement: "%"
+  value_template: "{{ value_json.Humidity }}"
+```
+
 ## 6. Commands and Operation
 
 As mentioned previously, the commands are very basic. In fact the switch will repond to 4 basic mqtt commands and they are :-
@@ -82,9 +99,15 @@ As mentioned previously, the commands are very basic. In fact the switch will re
 - stat (Returns the status of the switch via mqtt message)
 - reset (Forces a restart of the switch) (4 long flashes of the status LED)
 
+If you have installed Version 1.0t you have an additional option.
+
+- temp (Forces a temperature & humidity check otherwise it's reported every 1 minute) (1 short flash of the status LED)
+
 When power is first appplied the unit will immediately connect to your WiFi access point / router and mqtt broker. When it connects the status LED will flash fast 4 times. That's it, your connected.
 
-Press the switch on top to turn it on. Press it again to turn it off and watch the status change on HomeAssistant. Toggle the switch on HomeAssistant and the switch will change status accordingly. I could have made it more complex, but why?
+If you've installed v1.0t immediately after the 4 fast flashes you will see a short single flash to indicate that the temperature & humidity has been published via mqtt.
+
+Press the switch on top to turn on the relay. Press it again to turn it off and watch the status change on HomeAssistant. Toggle the switch on HomeAssistant and the switch will change status accordingly. I could have made it more complex, but why?
 
 To reset the switch manually, press and hold the switch for more than 4 seconds. The switch will respond with 4 long flashes and reboot.
 
@@ -92,10 +115,30 @@ To reset the switch manually, press and hold the switch for more than 4 seconds.
 
 ***Version 1.0p***
 
-Initial Release
+Firmware to control relay only with ON/FF functionality and publish it's status via mqtt.
 
-## 6. Conclusion
+***Version 1.0t***
 
-That's about it. Enjoy ! I have code that allows for a DHT-22 temperature sensor as well. The new batch of Sonoff switches expose GPIO14 to the header on pin 5 and it's fairly easy to install the sensor. I'm not sure that you should do it because internally all components are at mains potential. If your soldering is bad, it could be lethal. You've been warned !!
+Firmware to control relay with ON/OFF functionality and temperature reporting via DHT11/22 and publish via mqtt.
 
-I can however post it up here if people are interested.
+## 7. DHT22 Sensor Installation
+
+Installing the DHT11 or 22 sensor is relatively straight forward. In the photo below, GREY is SIGNAL (gpio14), WHITE is +V and BLACK is GND. Note how it connects to the Sonoff pins.
+
+![alt Sonoff Temperature Sensor Installation](images/sonoff_temp.jpg "Sonoff Temperature Sensor Installation")
+
+You will need a 10K resistor between +5V and SIGNAL. I have the soldered the 10K resistor under the heatshrink tubing so it isn't visable.
+
+![alt Sensor Wiring](images/sensor_wiring.jpg "Sensor Wiring")
+
+How you get the wires out of the casing after it's all assembled is completely up to you. I guess a Dremel and some handywork would be handy.
+
+Make sure to modify the Arduino code to indicate which sensor you are using.
+
+``` bash
+#define DHTTYPE         DHT22                                // (11 or 22) DHT Type
+```
+
+## 8. Conclusion
+
+That's about it. Enjoy! Any suggestions are welcome and I would be happy to answer any further questions as well you may have.
