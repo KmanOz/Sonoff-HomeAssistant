@@ -125,7 +125,7 @@ Firmware to control relay with ON/OFF functionality and temperature reporting vi
 
 Installing the DHT11 or 22 sensor is relatively straight forward. In the photo below, GREY is SIGNAL (gpio14), WHITE is +V and BLACK is GND. Note how it connects to the Sonoff pins.
 
-![alt Sonoff Sesnor Install](images/sonoff_temp.jpg "Sonoff Sensor Install")
+![alt Sonoff Sensor Install](images/sonoff_temp.JPG "Sonoff Sensor Install")
 
 You will need a 10K resistor between +5V and SIGNAL. I have the soldered the 10K resistor under the heatshrink tubing so it isn't visable.
 
