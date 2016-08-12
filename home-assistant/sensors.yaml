@@ -1,0 +1,13 @@
+- platform: mqtt
+  name: "Living Room Temp"
+  state_topic: "home/sonoff/living_room/1/temp"
+  qos: 1
+  unit_of_measurement: "°C"
+  value_template: "{{ value_json.Temp }}"
+
+- platform: mqtt
+  name: "Living Room Humidity"
+  state_topic: "home/sonoff/living_room/1/temp"
+  qos: 1
+  unit_of_measurement: "%"
+  value_template: "{{ value_json.Humidity }}"
