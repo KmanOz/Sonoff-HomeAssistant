@@ -151,7 +151,7 @@ On the newer TH series of switches it is recommended that you purchase the Sonof
 
 NOTE: I did have to enlarge the hole in the side of the top case for the plug to seat properly in the switch. If you do not make the hole bigger, you may get read errors because the plug doesn't make proper electrical connection! I'm not sure if that is a general design fault or was the case in the 2 switches that I had purchased.
 
-![alt Sensor Wiring](images/th10.jpg "Sensor Wiring")
+![alt Sensor Install](images/th10.JPG "Sensor Install")
 
 ## 10. HomeAssistant Community Discussion Forum
 
