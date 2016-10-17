@@ -64,6 +64,7 @@ void setup() {
   
   mqttClient.set_callback(callback);
   
+  WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
   Serial.begin(115200);
   Serial.println(VERSION);

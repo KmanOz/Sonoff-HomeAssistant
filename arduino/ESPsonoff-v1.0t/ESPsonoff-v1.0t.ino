@@ -74,6 +74,7 @@ void setup() {
   
   mqttClient.set_callback(callback);
   
+  WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
   Serial.begin(115200);
   Serial.println(VERSION);
@@ -199,6 +200,7 @@ void getTemp() {
   if (isnan(dhtH) || isnan(dhtT)) {
     mqttClient.publish(MQTT::Publish(MQTT_TOPIC"/debug","\"DHT Read Error\"").set_retain().set_qos(1));
     Serial.println("ERROR");
+    tempReport = false;
     return;
   }
   String pubString = "{\"Temp\": "+String(dhtT)+", "+"\"Humidity\": "+String(dhtH) + "}";
