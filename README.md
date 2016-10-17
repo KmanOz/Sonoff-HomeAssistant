@@ -36,6 +36,8 @@ I won't go into the specifics on how to install the code onto the Sonoff and wil
 
 As for the switch modifications, it's simply a matter of opening up the switch, installing a 4 or 5 pin header (depending on switch type) and then holding down the main switch on the unit before you power it up with your FTDI adapter. You are then good to go to re-flash your new firmware.
 
+![alt FTDI Diagram](images/th10ftdi.JPG "FTDI Diagram")
+
 If that didn't make any sense at all, I suggest you do some reading on how to install alternative software on a Sonoff switch before attempting anything else otherwise you risk turning it into toast (although it's pretty hard I have to admit).
 
 ## 4. Modify the details in the Arduino code to your specific details and environment.
