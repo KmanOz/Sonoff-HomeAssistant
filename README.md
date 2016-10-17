@@ -1,20 +1,20 @@
 # Sonoff-HomeAssistant Description
 
-Sonoff-HomeAssistant is alternative firmware for the brilliant & cheap ($$$ not quality) [ITEAD Sonoff](https://www.itead.cc/sonoff-wifi-wireless-switch.html) switch that allows you to use your own mqtt broker rather than the pre-defined 'ITEAD CLOUD' service that is shipped with the firmware in the unit. This would have to be one of the cheapest IoT switches available today. In fact, even if you knew how to build one, the components alone would cost more so why bother.
+Sonoff-HomeAssistant is alternative firmware for the brilliant & cheap ($ not quality) [ITEAD Sonoff Wireless Smart Switch](https://www.itead.cc/smart-home/sonoff-wifi-wireless-switch.html) & the newer [ITEAD Sonoff TH10A/16A Temperature and Humidity Monitoring WiFi Smart Switch](https://www.itead.cc/sonoff-wifi-wireless-switch.html) switch that allows you to use your own mqtt broker rather than the pre-defined 'ITEAD CLOUD' service that is shipped with the firmware in the unit. These would have to be some of the cheapest IoT switches available today. In fact, even if you knew how to build one from scratch, the components alone would cost more so why bother.
 
-It's designed to be installed with the Arduino IDE and has been tested on Arduino 1.6.9 but should be backwards & forwards compatible with other versions released. I realize there are many versions of mqtt based firmware(s) that have been written for the Sonoff switch, but I found most of them overly complex for my liking. This firmware is very basic but stable and just gets the job done. There is no RTC, no OTA firmware updates, no frills what so ever just the core functionality the switch needs to turn the relay on and off (and report temperature if using that ver). I've found that once the mqtt topic is set and the Sonoff switch has connected to your broker, you don't need to make any modifications to it ever again unless your infrascructure changes (i.e walls in home have moved, light becomes a fan, additional switches added in room etc). Even if you add additional switches, if your naming convention is right, the switch will not need to be touched again.
+It's designed to be installed with the Arduino IDE and has been tested on Arduino 1.6.9 but should be backwards & forwards compatible with other versions. I realize there are many other mqtt based firmware(s) that have been written for the Sonoff switches, but I found most of them overly complex for my liking. This firmware is basic but ***extemely stable*** and just gets the job done. There is no RTC, no OTA firmware updates, no frills what so ever just the core functionality the switch requires to turn the relay on and off (and report temperature if using that version). I've found that once the mqtt topic is set and the switch has connected to your mqtt broker, you don't need to make any modifications to it ever again unless you make major infrascructure changes (i.e walls in home have moved, light becomes a fan, additional switches added in room etc). Even if you add additional switches, if your naming convention is right, the switch will not need to be touched again.
 
-I've called the project Sonoff-HomeAssistant but the switch could be used for many of the other home automation systems that use a Mosquito broker. I'm not sure why you'd want to use anything other than [Home Assistant](https://home-assistant.io/) though :D
+I've called the project Sonoff-HomeAssistant but the switch could be used for many of the other home automation systems that use a mqtt broker. I'm not sure why you'd want to use anything other than [Home Assistant](https://home-assistant.io/) though.
 
-Speaking of Home Assistant, I have included a snippet of how to setup the [switch](https://home-assistant.io/components/switch.mqtt/) component in configuration.yaml and if you've installed Version 1.0t the [sensor](https://home-assistant.io/components/sensor.mqtt/) component as well.
+Speaking of Home Assistant, I have included a snippet of how to setup the [switch](https://home-assistant.io/components/switch.mqtt/) component in configuration.yaml and if you've installed the version that reports temperature the [sensor](https://home-assistant.io/components/sensor.mqtt/) component as well.
 
-And finally, I did this to help beginners get up and running quickly with HomeAssistant and Sonoff switches. A couple of hours of work and you can have your home automated at a fraction of the cost of some of the switches available today. 
+And finally, I did this to help beginners get up and running quickly with HomeAssistant and Sonoff switches. A couple of hours of work and you can have your home automated at a fraction of the cost of some of the more expensive power switches available today. 
 
 # Installation
 
 ## 1. Clone the Repository
 
-Clone the **Sonoff-HomeAssistant** repository to your local machine. Copy the required version (p OR t) to your Arduino directory. If using the temperature version of the code, you'll need the DHT library as well. It's available all over the internet.
+Clone the **Sonoff-HomeAssistant** repository to your local machine. Copy the required version for your switch to your Arduino directory. If using the temperature version of the code, you'll need the DHT library as well. It's available all over the internet.
 
 ``` bash
 $ git clone https://github.com/KmanOz/Sonoff-HomeAssistant
@@ -34,7 +34,7 @@ $ git clone https://github.com/Imroy/pubsubclient
 
 I won't go into the specifics on how to install the code onto the Sonoff and will assume you have the necessary skills to make it happen. You'll need the Arduino IDE and you will need to move the files you just cloned to the right directories. There are plenty or articles that cover all the steps involved already published on the Internet and a Google search should get you some good results.
 
-As for the switch modifications, it's simply a matter of opening up the unit, installing a 4 pin (or 5 pin for Temperature) header (you need to know how to solder) and then holding down the main switch on the unit before you power it up with your FTDI adapter. You are then good to go to re-flash your new firmware.
+As for the switch modifications, it's simply a matter of opening up the switch, installing a 4 or 5 pin header (depending on switch type) and then holding down the main switch on the unit before you power it up with your FTDI adapter. You are then good to go to re-flash your new firmware.
 
 If that didn't make any sense at all, I suggest you do some reading on how to install alternative software on a Sonoff switch before attempting anything else otherwise you risk turning it into toast (although it's pretty hard I have to admit).
 
@@ -71,7 +71,7 @@ switch:
 ```
 Assuming you make no changes to the topic in the code provided, you should be able to test the switch and be happy that you now have control using Home Assistant.
 
-If you've installed Version 1.0t, you can also setup sensors in HomeAssistant to display both Temperature & Humidity. Modify your configuration.yaml and add the following.
+If you've installed the version that reports temperature, you can also setup sensors in HomeAssistant to display both Temperature & Humidity. Modify your configuration.yaml and add the following.
 
 ```bash
 - platform: mqtt
@@ -97,29 +97,37 @@ As mentioned earlier, the commands are very basic. In fact the switch will respo
 - stat (Returns the status of the switch via mqtt message)
 - reset (Forces a restart of the switch) (4 long flashes of the status LED)
 
-If you've installed Version 1.0t you have an additional option.
+If you've installed the version that reports temperature you have an additional option.
 
 - temp (Forces a temperature & humidity check otherwise it's reported every 1 minute) (1 short flash of the status LED)
 
 When power is first applied the unit will immediately connect to your WiFi access point / router and your mqtt broker. When it connects the status LED will flash fast 4 times. That's it, your connected.
 
-If you've installed v1.0t immediately after the 4 fast flashes you will see a short single flash to indicate that the temperature & humidity has been published as well.
+If you've installed the version that reports temperature you will see a short single flash to indicate that the temperature & humidity has been published as well.
 
 Press the switch on top to turn on the relay. Press it again to turn it off and watch the status change in HomeAssistant. Toggle the switch in HomeAssistant and the relay & LED will toggle accordingly. I could have made it more complex, but why?
 
 To reset the switch manually, press and hold the switch for more than 4 seconds. The switch will respond with 4 long flashes and reboot.
 
-## 6. Versions
+## 7. Versions
 
-***Version 1.0p***
+***Version 1.0p - Original iTead Sonoff Switch***
 
 Firmware to control relay only with ON/FF functionality and publish it's status via mqtt.
 
-***Version 1.0t***
+***Version 1.0t - Original iTead Sonoff Switch***
 
 Firmware to control relay with ON/OFF functionality and temperature reporting via DHT11/22 and publish via mqtt.
 
-## 7. DHT22 Sensor Installation
+***ESPsonoff_TH-v1.0p - TH10/16 iTead Sonoff Switch***
+
+Firmware to control relay only with ON/FF functionality and publish it's status via mqtt.
+
+***ESPsonoff_TH-v1.0t - TH10/16 iTead Sonoff Switch***
+
+Firmware to control relay with ON/OFF functionality and temperature reporting using the Sonoff Sensor-AM2301 (available from iTead) and publish via mqtt. 
+
+## 8. DHT22 Sensor Installation (For Original Sonoff Switch)
 
 Installing the DHT11 or 22 sensor is relatively straight forward. DHT-11 reports only whole number values for temperture & humidity while the DHT-22 will report fractions as well. I recommend the DHT-22. In the photo below, GREY is SIGNAL (gpio14), WHITE is +V and BLACK is GND. Note how it connects to the Sonoff pins.
 
@@ -137,8 +145,21 @@ Make sure to modify the Arduino code to indicate which sensor you are using.
 #define DHTTYPE         DHT22                                // (11 or 22) DHT Type
 ```
 
-## 8. Conclusion
+## 9. Temperature Sensor Installation (For TH10/16 Sonoff Switch)
+
+On the newer TH series of switches it is recommended that you purchase the Sonoff Sensor-AM2301 directly from iTead rather that making one yourself. The unit has a 2.5mm phono plug that plugs directly into the TH10/16 unit and there is nothing else to do.
+
+NOTE: I did have to enlarge the hole in the side of the top case for the plug to seat properly in the switch. If you do not make the hole bigger, you may get read errors because the plug doesn't make proper electrical connection! I'm not sure if that is a general design fault or was the case in the 2 switches that I had purchased.
+
+![alt Sensor Wiring](images/th10.jpg "Sensor Wiring")
+
+## 10. HomeAssistant Community Discussion Forum
+
+For further information and to join the discussion for this firmware please go to the HomeAssistant Community Discussion Forum [ITEAD Sonoff Wireless Smart Switch](https://community.home-assistant.io/t/sonoff-homeassistant-alternative-firmware-for-sonoff-switches-for-use-with-mqtt-ha/2332). I would be happy to answer any of your queries there.
+
+## 11. Conclusion
 
 That's about it. Any feature suggestions are welcome and I would be happy to answer any further questions that you may have.
+
 
 Enjoy!
