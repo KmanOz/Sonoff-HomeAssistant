@@ -13,7 +13,7 @@
 #define MQTT_CLIENT     "Sonoff_Living_Room_v2.0t"           // mqtt client_id (Must be unique for each Sonoff)
 #define MQTT_SERVER     "192.168.0.100"                      // mqtt server
 #define MQTT_PORT       1883                                 // mqtt port
-#define MQTT_TOPIC      "home/sonoff/living_room/1"          // mqtt topic (Must be unique for each Sonoff)
+#define MQTT_TOPIC      "sonoff"                              // mqtt topic (Must be unique for each Sonoff)
 #define MQTT_USER       "user"                               // mqtt user
 #define MQTT_PASS       "pass"                               // mqtt password
 
