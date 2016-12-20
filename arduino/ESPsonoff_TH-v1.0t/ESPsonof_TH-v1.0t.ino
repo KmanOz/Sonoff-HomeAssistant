@@ -20,7 +20,7 @@
 #define WIFI_SSID       "homewifi"                           // wifi ssid
 #define WIFI_PASS       "homepass"                           // wifi password
 
-#define VERSION    "\n\n-----------------  Sonoff TH Powerpoint v1.0t  -----------------"
+#define VERSION    "\n\n-----------------  Sonoff TH Powerpoint v1.0t+ -----------------"
 
 DHT dht(DHTPIN, DHTTYPE, 11);                                // (Don't Change for Sonoff)
 
@@ -33,7 +33,10 @@ bool requestRestart = false;
 bool tempReport = false;
 
 int kUpdFreq = 1;
-int kRetries = 10;
+int kRetries = 30;
+int mTimer = 0;
+
+String str;
 
 unsigned long TTasks;
 unsigned long count = 0;
@@ -43,19 +46,34 @@ PubSubClient mqttClient(wifiClient, MQTT_SERVER, MQTT_PORT);
 Ticker btn_timer;
 
 void callback(const MQTT::Publish& pub) {
+  //lcd.print("Temp:"+payload.substring(payload.indexOf('temp', 135)+3,payload.indexOf('pres',150)-5)+" C");
+  Serial.println("MQTT Payload: " + pub.payload_string());
   if (pub.payload_string() == "stat") {
   }
   else if (pub.payload_string() == "on") {
     digitalWrite(RELAY, HIGH);
+    mTimer = 0;
+    sendStatus = true;
   }
   else if (pub.payload_string() == "off") {
     digitalWrite(RELAY, LOW);
+    mTimer = 0;
+    sendStatus = true;
   }
   else if (pub.payload_string() == "reset") {
     requestRestart = true;
   }
   else if (pub.payload_string() == "temp") {
     tempReport = true;
+  }
+  else { 
+    str = pub.payload_string();
+    int i = atoi(str.c_str());
+    if ((i > 0) && (i < 999)) {
+      mTimer = i;
+      digitalWrite(RELAY, HIGH);
+      sendStatus = true;
+    }
   }
   sendStatus = true;
 }
@@ -67,11 +85,12 @@ void setup() {
 
   digitalWrite(LED, HIGH);
   digitalWrite(RELAY, LOW);
+  mTimer = 0;
   
   btn_timer.attach(0.05, button);
   
   mqttClient.set_callback(callback);
-  
+
   WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
   Serial.begin(115200);
@@ -139,6 +158,7 @@ void button() {
   else {
     if (count > 1 && count <= 40) {   
       digitalWrite(RELAY, !digitalRead(RELAY));
+      mTimer = 0;
       sendStatus = true;
     } 
     else if (count >40){
@@ -174,6 +194,7 @@ void checkStatus() {
       mqttClient.publish(MQTT::Publish(MQTT_TOPIC"/stat", "on").set_retain().set_qos(1));
       Serial.println("Relay . . . . . . . . . . . . . . . . . . ON");
     }
+    mqttClient.publish(MQTT::Publish(MQTT_TOPIC"/timer", String(mTimer)).set_retain().set_qos(1));
     sendStatus = false;
   }
   if (requestRestart) {
@@ -212,5 +233,16 @@ void timedTasks() {
     TTasks = millis();
     checkConnection();
     tempReport = true;
+
+    if (mTimer > 0) {
+      mqttClient.publish(MQTT::Publish(MQTT_TOPIC"/timer", String(mTimer)).set_retain().set_qos(1));
+      Serial.println("TIMER " + String(mTimer));
+      
+      if (mTimer == 1) {
+          digitalWrite(RELAY, LOW);
+          sendStatus = true;
+        }
+      mTimer--;
+    }
   }
 }
