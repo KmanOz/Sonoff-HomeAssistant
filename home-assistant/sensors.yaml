@@ -1,3 +1,5 @@
+Sonoff TH 10/16 -------------------------------
+
 - platform: mqtt
   name: "Living Room Temp"
   state_topic: "home/sonoff/living_room/1/temp"
@@ -11,3 +13,19 @@
   qos: 1
   unit_of_measurement: "%"
   value_template: "{{ value_json.Humidity }}"
+  
+Sonoff Pow -------------------------------------
+	
+- platform: mqtt
+  name: "Living Room Power"
+  state_topic: "home/sonoff/living_room/1/power"
+  qos: 1
+  unit_of_measurement: "W"
+  value_template: "{{ value_json.Power }}"
+
+- platform: mqtt
+  name: "Living Room Voltage"
+  state_topic: "home/sonoff/living_room/1/power"
+  qos: 1
+  unit_of_measurement: "V"
+  value_template: "{{ value_json.Voltage }}"
