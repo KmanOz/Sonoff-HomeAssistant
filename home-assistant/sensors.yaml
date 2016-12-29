@@ -13,9 +13,9 @@ Sonoff TH 10/16 -------------------------------
   qos: 1
   unit_of_measurement: "%"
   value_template: "{{ value_json.Humidity }}"
-  
+
 Sonoff Pow -------------------------------------
-	
+
 - platform: mqtt
   name: "Living Room Power"
   state_topic: "home/sonoff/living_room/1/power"
