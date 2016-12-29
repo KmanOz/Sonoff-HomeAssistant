@@ -23,6 +23,7 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include <Ticker.h>
+#include "power.h"
 
 #define BUTTON          0                                    // (Don't Change for Sonoff POW)
 #define RELAY           12                                   // (Don't Change for Sonoff POW)
@@ -213,12 +214,12 @@ void checkConnection() {
 void checkStatus() {
   if (sendStatus) {
     if(digitalRead(RELAY) == LOW)  {
-      mqttClient.publish(MQTT::Publish(MQTT_TOPIC"/stat", "on").set_retain().set_qos(1));
+      mqttClient.publish(MQTT::Publish(MQTT_TOPIC"/stat", "off").set_retain().set_qos(1));
       if (debug) {
         Serial.println("Relay . . . . . . . . . . . . . . . . . . . . . . . . . . . . OFF");
       }
     } else {
-      mqttClient.publish(MQTT::Publish(MQTT_TOPIC"/stat", "off").set_retain().set_qos(1));
+      mqttClient.publish(MQTT::Publish(MQTT_TOPIC"/stat", "on").set_retain().set_qos(1));
       if (debug) {
         Serial.println("Relay . . . . . . . . . . . . . . . . . . . . . . . . . . . . ON");
       }
