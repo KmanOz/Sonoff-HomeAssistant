@@ -68,14 +68,14 @@ Change the WIFI_SSID, WIFI_PASS, MQTT_CLIENT, MQTT_SERVER, MQTT_PORT, MQTT_USER,
 
 ```bash
 switch:
-  platform: mqtt
-  name: "Living Room"
-  state_topic: "home/sonoff/living_room/1/stat"
-  command_topic: "home/sonoff/living_room/1"
-  qos: 1
-  payload_on: "on"
-  payload_off: "off"
-  retain: true
+  - platform: mqtt
+    name: "Living Room"
+    state_topic: "home/sonoff/living_room/1/stat"
+    command_topic: "home/sonoff/living_room/1"
+    qos: 1
+    payload_on: "on"
+    payload_off: "off"
+    retain: true
 ```
 Assuming you make no changes to the topic in the code provided, you should be able to test the switch and be happy that you now have control using Home Assistant.
 
