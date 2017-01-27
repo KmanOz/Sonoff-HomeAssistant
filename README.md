@@ -1,12 +1,15 @@
 # Sonoff-HomeAssistant Description
 
-Sonoff-HomeAssistant is alternative firmware for the brilliant & cheap ($ not quality) range of Sonoff ESP-8266 based WiFi controlled switches that allow you to use your own mqtt broker rather than the 'ITEAD CLOUD' service that's shipped with the pre-installed firmware. They would have to be some of the cheapest IoT switches available today. In fact, even if you knew how to build one from scratch, the components alone would cost more so why bother.
+Sonoff-HomeAssistant is alternative firmware for the brilliant & cheap ($ not quality) range of Sonoff range of ESP-8266 based WiFi controlled switches that allow you to use your own mqtt broker rather than the 'ITEAD CLOUD' service that's shipped with the pre-installed firmware. They would have to be some of the cheapest IoT switches available today. In fact, even if you knew how to build one from scratch, the components alone would cost more so why bother.
 
 #### Supported devices :-
 
-- Sonoff WiFi Wireless Smart Switch [Link](https://www.itead.cc/smart-home/sonoff-wifi-wireless-switch.html?acc=70efdf2ec9b086079795c442636b55fb)
+- Original Sonoff WiFi Wireless Smart Switch [Link](https://www.itead.cc/smart-home/sonoff-wifi-wireless-switch.html?acc=70efdf2ec9b086079795c442636b55fb)
 - Sonoff TH10/TH16 Temperature and Humidity Monitoring WiFi Smart Switch [Link](https://www.itead.cc/sonoff-th.html?acc=70efdf2ec9b086079795c442636b55fb)
 - Sonoff Pow WiFi Switch with Power Consumption Measurement [Link](https://www.itead.cc/sonoff-pow.html?acc=70efdf2ec9b086079795c442636b55fb)
+- Sonoff Touch - Luxury Glass Panel Touch LED Light Switch [Link](https://www.itead.cc/smart-home/sonoff-touch.html?acc=70efdf2ec9b086079795c442636b55fb)
+- Sonoff S20 Smart Socket - WiFi Smart Socket [Link](https://www.itead.cc/smart-home/smart-socket.html?acc=70efdf2ec9b086079795c442636b55fb)
+- Sonoff SV Safe Voltage WiFi Wireless Switch Smart Home Module [Link](https://www.itead.cc/smart-home/sonoff-sv.html?acc=70efdf2ec9b086079795c442636b55fb)
 
 It's designed to be installed with the Arduino IDE and has been tested on Arduino 1.6.13 but should be backwards & forwards compatible with other versions. I realize there are many other mqtt based firmware(s) that have been written for the Sonoff switches, but I found most of them overly complex for my liking. This firmware is basic but ***extemely stable*** and just gets the job done. There is no RTC, no OTA firmware updates, no frills what so ever just the core functionality the switch requires to turn the relay on and off (and report temperature if using that version or power consumption if using the Pow). I've found that once the mqtt topic is set and the switch has connected to your mqtt broker, you don't need to make any modifications to it ever again unless you make major infrascructure changes (i.e walls in home have moved, light becomes a fan, additional switches added in room etc). Even if you add additional switches, if your naming convention is right, the switch will not need to be touched again.
 
@@ -36,17 +39,7 @@ It's currently setup to use only v3.1.1 of the mqtt standard and will only work 
 $ git clone https://github.com/Imroy/pubsubclient
 ```
 
-## 3. Flash the software to the Sonoff Switch
-
-I won't go into the specifics on how to install the code onto the Sonoff and will assume you have the necessary skills to make it happen. You'll need the Arduino IDE and you will need to move the files you just cloned to the right directories. There are plenty or articles that cover all the steps involved already published on the Internet and a Google search should get you some good results.
-
-As for the switch modifications, it's simply a matter of opening up the switch, installing a 4 or 5 pin header (depending on switch type) and then holding down the main switch on the unit before you power it up with your FTDI adapter. You are then good to go to re-flash your new firmware.
-
-![alt FTDI Diagram](images/th10ftdi.JPG "FTDI Diagram")
-
-If that didn't make any sense at all, I suggest you do some reading on how to install alternative software on a Sonoff switch before attempting anything else otherwise you risk turning it into toast (although it's pretty hard I have to admit).
-
-## 4. Modify the details in the Arduino code to your specific details and environment.
+## 3. Modify the details in the Arduino code to your specific details and environment.
 
 Change the WIFI_SSID, WIFI_PASS, MQTT_CLIENT, MQTT_SERVER, MQTT_PORT, MQTT_USER, MQTT_PASS in the Arduino code provided to suit your environment.
 
@@ -63,8 +56,7 @@ Change the WIFI_SSID, WIFI_PASS, MQTT_CLIENT, MQTT_SERVER, MQTT_PORT, MQTT_USER,
 #define WIFI_SSID       "homewifi"                           // wifi ssid
 #define WIFI_PASS       "homepass"                           // wifi password
 ```
-
-## 5. Modify configuration.yaml in HomeAssistant and add the following to it.
+## 4. Modify configuration.yaml in HomeAssistant and add the following to it.
 
 ```bash
 switch:
@@ -72,7 +64,7 @@ switch:
     name: "Living Room"
     state_topic: "home/sonoff/living_room/1/stat"
     command_topic: "home/sonoff/living_room/1"
-    qos: 1
+    qos: 0
     payload_on: "on"
     payload_off: "off"
     retain: true
@@ -82,36 +74,49 @@ Assuming you make no changes to the topic in the code provided, you should be ab
 If you've installed the version that reports temperature, you can also setup sensors in HomeAssistant to display both Temperature & Humidity. Modify your configuration.yaml and add the following.
 
 ```bash
-- platform: mqtt
-  name: "Living Room Temp"
-  state_topic: "home/sonoff/living_room/1/temp"
-  qos: 1
-  unit_of_measurement: "°C"
-  value_template: "{{ value_json.Temp }}"
-- platform: mqtt
-  name: "Living Room Humidity"
-  state_topic: "home/sonoff/living_room/1/temp"
-  qos: 1
-  unit_of_measurement: "%"
-  value_template: "{{ value_json.Humidity }}"
+sensor:
+  - platform: mqtt
+    name: "Living Room Temp"
+    state_topic: "home/sonoff/living_room/1/temp"
+    qos: 1
+    unit_of_measurement: "°C"
+    value_template: "{{ value_json.Temp }}"
+  
+  - platform: mqtt
+    name: "Living Room Humidity"
+    state_topic: "home/sonoff/living_room/1/temp"
+    qos: 1
+    unit_of_measurement: "%"
+    value_template: "{{ value_json.Humidity }}"
 ```
 For the POW use the following and insert it into your configuration.yaml.
 
 ```bash
-- platform: mqtt
-  name: "Living Room Power"
-  state_topic: "home/sonoff/living_room/1/power"
-  qos: 1
-  unit_of_measurement: "W"
-  value_template: "{{ value_json.Power }}"
+sensor:
+  - platform: mqtt
+    name: "Living Room Power"
+    state_topic: "home/sonoff/living_room/1/power"
+    qos: 1
+    unit_of_measurement: "W"
+    value_template: "{{ value_json.Power }}"
 
-- platform: mqtt
-  name: "Living Room Voltage"
-  state_topic: "home/sonoff/living_room/1/power"
-  qos: 1
-  unit_of_measurement: "V"
-  value_template: "{{ value_json.Voltage }}"
+  - platform: mqtt
+    name: "Living Room Voltage"
+    state_topic: "home/sonoff/living_room/1/power"
+    qos: 1
+    unit_of_measurement: "V"
+    value_template: "{{ value_json.Voltage }}"
 ```
+
+## 5. Flash the software to the Sonoff Switch
+
+I won't go into the specifics on how to install the code onto the Sonoff and will assume you have the necessary skills to make it happen. You'll need the Arduino IDE and you will need to move the files you just cloned to the right directories. There are plenty or articles that cover all the steps involved already published on the Internet and a Google search should get you some good results.
+
+As for the switch modifications, it's simply a matter of opening up the switch, installing a 4 or 5 pin header (depending on switch type) and then holding down the main switch on the unit before you power it up with your FTDI adapter. You are then good to go to re-flash your new firmware. The photo below is for illustration only and different products will require the same basic connection but headers will be located in different positions etc.
+
+![alt FTDI Diagram](images/th10ftdi.JPG "FTDI Diagram")
+
+If that didn't make any sense at all, I suggest you do some reading on how to install alternative software on a Sonoff switch before attempting anything else otherwise you risk turning it into toast (although it's pretty hard I have to admit).
 
 ## 6. Commands and Operation
 
@@ -136,25 +141,29 @@ To reset the switch manually, press and hold the switch for more than 4 seconds.
 
 ## 7. Versions
 
-***Version 1.0p - Original iTead Sonoff Switch***
+***ESPsonoff-v1.01p - Original iTead Sonoff Switch, Sonoff Touch, Sonof S20 Smart Socket, Sonoff SV***
 
-Firmware to control relay only with ON/FF functionality and publish it's status via mqtt.
+Firmware to control relay only with ON/FF functionality and publish via mqtt. EEPROM storage of Relay State.
 
-***Version 1.0t - Original iTead Sonoff Switch***
+***ESPsonoff-v1.01t - Original iTead Sonoff Switch***
 
-Firmware to control relay with ON/OFF functionality and temperature reporting via DHT11/22 and publish via mqtt.
+Firmware to control relay with ON/OFF functionality and temperature reporting via DHT11/22 and publish via mqtt. EEPROM storage of Relay State.
 
-***ESPsonoff_TH-v1.0p - TH10/16 iTead Sonoff Switch***
+***ESPsonoff_TH-v1.01p - TH10/16 iTead Sonoff Switch***
 
-Firmware to control relay only with ON/FF functionality and publish it's status via mqtt.
+Firmware to control relay only with ON/FF functionality and publish it's status via mqtt. EEPROM storage of Relay State. Remote Wallswitch Support.
 
-***ESPsonoff_TH-v1.0t - TH10/16 iTead Sonoff Switch***
+***ESPsonoff_TH-v1.01t - TH10/16 iTead Sonoff Switch***
 
-Firmware to control relay with ON/OFF functionality and temperature reporting using the Sonoff Sensor-AM2301 (available from iTead) and publish via mqtt.
+Firmware to control relay with ON/OFF functionality and temperature reporting using the Sonoff Sensor-AM2301 (available from iTead) and publish via mqtt. EEPROM storage of Relay State.
 
-***ESPsonoff_POW-v1.0 - iTead Sonoff Pow Switch***
+***ESPsonoff_TH-v1.01pt - TH10/16 iTead Sonoff Switch***
 
-Firmware to control relay with ON/OFF functionality and report power usage (Wattage) and Voltage via mqtt. 
+Firmware to control relay with ON/OFF functionality and temperature reporting using the Sonoff Sensor-AM2301 (available from iTead) and publish via mqtt. EEPROM storage of Relay State. Remote Wallswitch Support.
+
+***ESPsonoff_POW-v1.01 - iTead Sonoff Pow Switch***
+
+Firmware to control relay with ON/OFF functionality and report power usage (Wattage) and Voltage via mqtt. EEPROM storage of Relay State
 
 ## 8. DHT22 Sensor Installation (For Original Sonoff Switch)
 
@@ -188,7 +197,7 @@ For further information and to join the discussion for this firmware please go t
 
 ## 11. MIT License
 
-Copyright (c) 2016
+Copyright (c) 2017
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
