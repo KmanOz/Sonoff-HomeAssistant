@@ -1,0 +1,8 @@
+  esp8266 OTA Unit ID Map
+
+  NAME					UNIT TYPE		    LOCATION				MQTT TOPIC							INFO
+  -------------------------------------------------------------------------------------------------------------------------------------------
+* esp8266-xxxxxx		Sonoff TH			IT Cupboard				home/sonoff/IT_closet/1				Plugged into Cupboard Fan
+* esp8266-xxxxxx		Sonoff LED			Workbench				home/sonoff_led/test				Above Workbench
+* esp8266-xxxxxx		ESP8266MOD			Workbench				home/esp_devices/workbench			Test unit on Protoboard
+* esp8266-xxxxxx		Basic Sonoff		Garage					home/sonoff/garage/1         		Main light switch behind Wallswitch
