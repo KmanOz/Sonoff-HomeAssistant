@@ -11,7 +11,7 @@ Sonoff-HomeAssistant is alternative firmware for the brilliant & cheap ($ not qu
 - Sonoff S20 Smart Socket - WiFi Smart Socket [Link](https://www.itead.cc/smart-home/smart-socket.html?acc=70efdf2ec9b086079795c442636b55fb)
 - Sonoff SV Safe Voltage WiFi Wireless Switch Smart Home Module [Link](https://www.itead.cc/smart-home/sonoff-sv.html?acc=70efdf2ec9b086079795c442636b55fb)
 
-It's designed to be installed with the Arduino IDE and has been tested on Arduino 1.6.13 but should be backwards & forwards compatible with other versions. I realize there are many other mqtt based firmware(s) that have been written for the Sonoff switches, but I found most of them overly complex for my liking. This firmware is basic but ***extemely stable*** and just gets the job done. There is no RTC, no OTA firmware updates, no frills what so ever just the core functionality the switch requires to turn the relay on and off (and report temperature if using that version or power consumption if using the Pow). I've found that once the mqtt topic is set and the switch has connected to your mqtt broker, you don't need to make any modifications to it ever again unless you make major infrascructure changes (i.e walls in home have moved, light becomes a fan, additional switches added in room etc). Even if you add additional switches, if your naming convention is right, the switch will not need to be touched again.
+It's designed to be installed with the Arduino IDE and has been tested on Arduino 1.6.13 but should be backwards & forwards compatible with other versions. I realize there are many other mqtt based firmware(s) that have been written for the Sonoff switches, but I found most of them overly complex for my liking. This firmware is basic but ***extemely stable*** and just gets the job done. There are no frills what so ever just the core functionality the switch requires to turn the relay on and off (and report temperature if using that version or power consumption if using the Pow). The OTA versions of the firmware allow OTA upgrade using the Arduino IDE (correct environment for OTA needs to be setup). I've found that once the mqtt topic is set and the switch has connected to your mqtt broker, you don't need to make any modifications to it ever again unless you make major infrastructure changes (i.e walls in home have moved, light becomes a fan, additional switches added in room etc). Even if you add additional switches, if your naming convention is right, the switch will not need to be touched again.
 
 I've called the project Sonoff-HomeAssistant but the switch could be used for many of the other home automation systems that use a mqtt broker. I'm not sure why you'd want to use anything other than [Home Assistant](https://home-assistant.io/) though.
 
@@ -139,7 +139,15 @@ Press the switch on top to turn on the relay. Press it again to turn it off and 
 
 To reset the switch manually, press and hold the switch for more than 4 seconds. The switch will respond with 4 long flashes and reboot.
 
-## 7. Versions
+**OTA Operation**
+
+Assuming you have the correct environment setup for OTA and have the OTA version of the firmware for your switch installed, you can update the firmware via the Arduino IDE using OTA.
+
+When the unit enters OTA, the status LED will flash twice. Once entered and firmware is being updated the status LED will flash fast continuously as packets are received. If the upload was successful the status LED will remain ON and in a short amount of time will turn off. The switch will reset and the status LED will flash 4 times fast.
+
+If unsuccessful after it enters OTA upgrade mode, it will exit with 2 fast flashes of the Status LED and either resume normally, or reset depending on the error.
+
+## 7. Versions (OTA is optional for all)
 
 ***ESPsonoff-v1.01p - Original iTead Sonoff Switch, Sonoff Touch, Sonof S20 Smart Socket, Sonoff SV***
 
