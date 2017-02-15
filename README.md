@@ -116,7 +116,9 @@ sensor:
     value_template: "{{ value_json.Voltage }}"
 ```
 
-## 5. Flash the software to the Sonoff Switch
+## 5. Flash the software
+
+### 5.1 Sonoff Switch
 
 I won't go into the specifics on how to install the code onto the Sonoff and will assume you have the necessary skills to make it happen. You'll need the Arduino IDE and you will need to move the files you just cloned to the right directories. There are plenty or articles that cover all the steps involved already published on the Internet and a Google search should get you some good results.
 
@@ -125,6 +127,15 @@ As for the switch modifications, it's simply a matter of opening up the switch, 
 ![alt FTDI Diagram](images/th10ftdi.JPG "FTDI Diagram")
 
 If that didn't make any sense at all, I suggest you do some reading on how to install alternative software on a Sonoff switch before attempting anything else otherwise you risk turning it into toast (although it's pretty hard I have to admit).
+
+### 5.2 Sonoff Touch
+
+1. Solder a four pin header to the four spare pads or use male pin cables
+![Sonoff Touch board](https://github.com/davidmpye/davidmpye.github.io/raw/master/img/sonoff_touch/prog_pinouts.jpg)
+2. Connect an FTDI programming board (NB Must be 3v3, not 5v, unless you want to risk destroying the ESP8265) to the pins.
+REMEMBER, You will need to connect the RX of your FTDI interface to the TX pin labelled above, and connect the TX of your FTDI interface to the RX pin labelled above.
+3. You will need to pull the labelled GPIO0 pin to GND (ie low) before applying power to the circuit, in order to get the Sonoff Touch to start in firmware upload mode. You can do this with a wire with a fine pin (such as from a pin header) with the other end connected to GND.
+4. Upload the firmware using Arduino IDE. Make sure that the selected board is "Generic ESP8285 Module" and the upload speed is 115200
 
 ## 6. Commands and Operation
 
