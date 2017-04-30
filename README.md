@@ -1,5 +1,7 @@
 # Sonoff-HomeAssistant
 
+![](images/sonoff.png "Sonoff Range")
+
 Sonoff-HomeAssistant is alternative firmware for the brilliant & cheap ($ not quality) range of Sonoff range of ESP-8266 based WiFi controlled switches that allow you to use your own mqtt broker rather than the 'ITEAD CLOUD' service that's shipped with the pre-installed firmware. They would have to be some of the cheapest IoT switches available today. In fact, even if you knew how to build one from scratch, the components alone would cost more so why bother.
 
 #### Currently Supported Devices
@@ -10,11 +12,11 @@ Sonoff-HomeAssistant is alternative firmware for the brilliant & cheap ($ not qu
 - Sonoff Touch [Link](https://www.itead.cc/smart-home/sonoff-touch.html?acc=70efdf2ec9b086079795c442636b55fb)
 - Sonoff S20 [Link](https://www.itead.cc/smart-home/smart-socket.html?acc=70efdf2ec9b086079795c442636b55fb)
 - Sonoff SV [Link](https://www.itead.cc/smart-home/sonoff-sv.html?acc=70efdf2ec9b086079795c442636b55fb)
+- Sonoff 4CH [Link](https://www.itead.cc/smart-home/sonoff-4ch.html?acc=70efdf2ec9b086079795c442636b55fb)
 
 #### Planned Support
 
 - Sonoff DUAL [Link](https://www.itead.cc/smart-home/sonoff-dual.html?acc=70efdf2ec9b086079795c442636b55fb)
-- Sonoff 4CH [Link](https://www.itead.cc/smart-home/sonoff-4ch.html?acc=70efdf2ec9b086079795c442636b55fb)
 - Sonoff SC [Link](https://www.itead.cc/smart-home/sonoff-sc.html?acc=70efdf2ec9b086079795c442636b55fb)
 
 It's designed to be installed with the Arduino IDE and has been tested on Arduino 1.6.13 but should be backwards & forwards compatible with other versions. I realize there are many other mqtt based firmware(s) that have been written for the Sonoff switches, but I found most of them overly complex for my liking. This firmware is basic but ***extremely stable*** and just gets the job done. There are no frills what so ever, just the core functionality the switch requires to turn the relay on and off (and report temperature if using that version or power consumption if using the POW). The OTA versions of the firmware allow OTA upgrade using the Arduino IDE (correct environment for OTA needs to be setup). All Home Automation 'logic' is done in HomeAssistant. That is why you installed HomeAssistant in the first place right!
@@ -116,9 +118,7 @@ sensor:
     value_template: "{{ value_json.Voltage }}"
 ```
 
-## 5. Flash the software
-
-### 5.1 Sonoff Switch
+## 5. Flash the software to the Sonoff Switch
 
 I won't go into the specifics on how to install the code onto the Sonoff and will assume you have the necessary skills to make it happen. You'll need the Arduino IDE and you will need to move the files you just cloned to the right directories. There are plenty or articles that cover all the steps involved already published on the Internet and a Google search should get you some good results.
 
@@ -128,22 +128,13 @@ As for the switch modifications, it's simply a matter of opening up the switch, 
 
 If that didn't make any sense at all, I suggest you do some reading on how to install alternative software on a Sonoff switch before attempting anything else otherwise you risk turning it into toast (although it's pretty hard I have to admit).
 
-### 5.2 Sonoff Touch
-
-1. Solder a four pin header to the four spare pads or use male pin cables
-![Sonoff Touch board](https://github.com/davidmpye/davidmpye.github.io/raw/master/img/sonoff_touch/prog_pinouts.jpg)
-2. Connect an FTDI programming board (NB Must be 3v3, not 5v, unless you want to risk destroying the ESP8265) to the pins.
-REMEMBER, You will need to connect the RX of your FTDI interface to the TX pin labelled above, and connect the TX of your FTDI interface to the RX pin labelled above.
-3. You will need to pull the labelled GPIO0 pin to GND (ie low) before applying power to the circuit, in order to get the Sonoff Touch to start in firmware upload mode. You can do this with a wire with a fine pin (such as from a pin header) with the other end connected to GND.
-4. Upload the firmware using Arduino IDE. Make sure that the selected board is "Generic ESP8285 Module" and the upload speed is 115200
-
 ## 6. Commands and Operation
 
 As mentioned earlier, the commands are very basic. In fact the switch will respond to 4 basic mqtt commands and they are :-
 
-- on (Turns the relay and LED on)
-- off (Turns the relay and LED off)
-- stat (Returns the status of the switch via mqtt message)
+- on (Turns the relay and LED on)(For 4CH precede the *on* command by the number of the relay. e.g 1on, 3on etc)
+- off (Turns the relay and LED off)(For 4CH precede the *off* command by the number of the relay. e.g 2off, 3off etc)
+- stat (Returns the status of the switch via mqtt message)(For 4CH the number of the relay will precede the status. e.g. 1on, 4off)
 - reset (Forces a restart of the switch) (4 long flashes of the status LED)
 
 If you've installed the version that reports temperature you have an additional option.
@@ -156,7 +147,7 @@ If you've installed the version that reports temperature you will see a short si
 
 Press the switch on top to turn on the relay. Press it again to turn it off and watch the status change in HomeAssistant. Toggle the switch in HomeAssistant and the relay & LED will toggle accordingly. I could have made it more complex, but why?
 
-To reset the switch manually, press and hold the switch for more than 4 seconds. The switch will respond with 4 long flashes and reboot.
+To reset the switch manually, press and hold the switch for more than 4 seconds. (4CH press and hold Relay 1 switch) The switch will respond with 4 long flashes and reboot.
 
 **OTA Operation**
 
@@ -170,7 +161,7 @@ If unsuccessful after it enters OTA upgrade mode, it will exit with 2 fast flash
 
 ***ESPsonoff-v1.01p - Original iTead Sonoff Switch, Sonoff Touch, Sonof S20 Smart Socket, Sonoff SV***
 
-Firmware to control relay only with ON/FF functionality and publish via mqtt. EEPROM storage of Relay State.
+Firmware to control relay only with ON/OFF functionality and publish via mqtt. EEPROM storage of Relay State.
 
 ***ESPsonoff-v1.01t - Original iTead Sonoff Switch***
 
@@ -178,7 +169,7 @@ Firmware to control relay with ON/OFF functionality and temperature reporting vi
 
 ***ESPsonoff_TH-v1.01p - TH10/16 iTead Sonoff Switch***
 
-Firmware to control relay only with ON/FF functionality and publish it's status via mqtt. EEPROM storage of Relay State. Remote Wallswitch Support.
+Firmware to control relay only with ON/OFF functionality and publish it's status via mqtt. EEPROM storage of Relay State. Remote Wallswitch Support.
 
 ***ESPsonoff_TH-v1.01t - TH10/16 iTead Sonoff Switch***
 
@@ -191,6 +182,10 @@ Firmware to control relay with ON/OFF functionality and temperature reporting us
 ***ESPsonoff_POW-v1.01 - iTead Sonoff Pow Switch***
 
 Firmware to control relay with ON/OFF functionality and report power usage (Wattage) and Voltage via mqtt. EEPROM storage of Relay State
+
+***ESPsonoff_4CH-v1.01 - iTead Sonoff 4CH Switch***
+
+Firmware to control 4 X relays with ON/OFF functionality and publish via mqtt. EEPROM storage of Relay State.
 
 ## 8. DHT22 Sensor Installation (For Original Sonoff Switch)
 
