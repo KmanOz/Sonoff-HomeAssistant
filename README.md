@@ -169,7 +169,7 @@ Firmware to control relay with ON/OFF functionality and temperature reporting vi
 
 ***ESPsonoff_TH-v1.01p - TH10/16 iTead Sonoff Switch***
 
-Firmware to control relay only with ON/OFF functionality and publish it's status via mqtt. EEPROM storage of Relay State. Remote Wallswitch Support.
+Firmware to control relay only with ON/OFF functionality and publish its status via mqtt. EEPROM storage of Relay State. Remote Wallswitch Support.
 
 ***ESPsonoff_TH-v1.01t - TH10/16 iTead Sonoff Switch***
 
@@ -189,7 +189,7 @@ Firmware to control 4 X relays with ON/OFF functionality and publish via mqtt. E
 
 ## 8. DHT22 Sensor Installation (For Original Sonoff Switch)
 
-Installing the DHT11 or 22 sensor is relatively straight forward. DHT-11 reports only whole number values for temperture & humidity while the DHT-22 will report fractions as well. I recommend the DHT-22. In the photo below, GREY is SIGNAL (gpio14), WHITE is +V and BLACK is GND. Note how it connects to the Sonoff pins.
+Installing the DHT11 or 22 sensor is relatively straight forward. DHT-11 reports only whole number values for temperature & humidity while the DHT-22 will report fractions as well. I recommend the DHT-22. In the photo below, GREY is SIGNAL (gpio14), WHITE is +V and BLACK is GND. Note how it connects to the Sonoff pins.
 
 ![alt Sonoff Sensor Install](images/sonoff_temp.JPG "Sonoff Sensor Install")
 
