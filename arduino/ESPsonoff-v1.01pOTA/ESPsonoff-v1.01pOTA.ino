@@ -42,6 +42,7 @@
 #define BUTTON          0                                    // (Don't Change for Original Sonoff, Sonoff SV, Sonoff Touch, Sonoff S20 Socket)
 #define RELAY           12                                   // (Don't Change for Original Sonoff, Sonoff SV, Sonoff Touch, Sonoff S20 Socket)
 #define LED             13                                   // (Don't Change for Original Sonoff, Sonoff SV, Sonoff Touch, Sonoff S20 Socket)
+#define WALL_SWITCH     14
 
 #define MQTT_CLIENT     "Sonoff_Living_Room_v1.01pOTA"       // mqtt client_id (Must be unique for each Sonoff)
 #define MQTT_SERVER     "192.168.0.100"                      // mqtt server
@@ -63,6 +64,7 @@ bool requestRestart = false;                                 // (Do not Change)
 int kUpdFreq = 1;                                            // Update frequency in Mintes to check for mqtt connection
 int kRetries = 10;                                           // WiFi retry count. Increase if not connecting to router.
 int lastRelayState;                                          // (Do not Change)
+int lastSwitchState;
 
 unsigned long TTasks;                                        // (Do not Change)
 unsigned long count = 0;                                     // (Do not Change)
@@ -96,8 +98,11 @@ void setup() {
   pinMode(LED, OUTPUT);
   pinMode(RELAY, OUTPUT);
   pinMode(BUTTON, INPUT);
+  pinMode(WALL_SWITCH, OUTPUT);
   digitalWrite(LED, HIGH);
   digitalWrite(RELAY, LOW);
+  digitalWrite(WALL_SWITCH, HIGH);
+  lastSwitchState = 1;
   Serial.begin(115200);
   EEPROM.begin(8);
   lastRelayState = EEPROM.read(0);
@@ -184,6 +189,7 @@ void loop() {
   if (OTAupdate == false) { 
     mqttClient.loop();
     timedTasks();
+    checkExternalSwitch();
     checkStatus();
   }
 }
@@ -228,6 +234,15 @@ void checkConnection() {
   else { 
     Serial.println("WiFi connection . . . . . . . . . . LOST");
     requestRestart = true;
+  }
+}
+
+void checkExternalSwitch() {
+  if (digitalRead(WALL_SWITCH) != lastSwitchState)  {
+    digitalWrite(LED, !digitalRead(LED));
+    digitalWrite(RELAY, !digitalRead(RELAY));
+    lastSwitchState = !lastSwitchState;
+    sendStatus = true;
   }
 }
 
