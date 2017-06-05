@@ -98,8 +98,11 @@ void setup() {
   pinMode(LED, OUTPUT);
   pinMode(RELAY, OUTPUT);
   pinMode(BUTTON, INPUT);
+  pinMode(WALL_SWITCH, OUTPUT);
   digitalWrite(LED, HIGH);
   digitalWrite(RELAY, LOW);
+  digitalWrite(WALL_SWITCH, HIGH);
+  lastSwitchState = 1;
   Serial.begin(115200);
   EEPROM.begin(8);
   lastRelayState = EEPROM.read(0);
