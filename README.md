@@ -43,6 +43,8 @@ $ git clone https://github.com/KmanOz/Sonoff-HomeAssistant
 
 I use the [lmroy](https://github.com/Imroy/pubsubclient) version of this excellent mqtt library, mainly because it supports QOS1 and keepalive settings right from within the sketch. No other modifications to library files are necessary to achieve a rock solid connection to your mqtt broker.
 
+If you have the PubSubClient library already downloaded in your Arduino IDE, Open your Arduino Preferences and copy/paste you sketchbook location into a file browser window, then rename the existing PubSubClient in the libraries folder prior to copying the new files below. You do not need to restart the IDE to take effect. 
+
 It's currently setup to use only v3.1.1 of the mqtt standard and will only work on that version broker unless you modify the code so make sure your broker is setup to use v3.1.1 of the mqtt standard and not v3.1.
 
 ``` bash
@@ -121,6 +123,15 @@ sensor:
 ## 5. Flash the software to the Sonoff Switch
 
 I won't go into the specifics on how to install the code onto the Sonoff and will assume you have the necessary skills to make it happen. You'll need the Arduino IDE and you will need to move the files you just cloned to the right directories. There are plenty or articles that cover all the steps involved already published on the Internet and a Google search should get you some good results.
+
+Sonoff requires some settings for flashing successfullyin Arduino IDE. Don't worry if you don't get these right first time, as using FTDI it will not brick anything, but can leave it without any code to run. This assumes you already have the esp8266 board installed in Board Manager (search online for this)
+
+Under tools menu:
+- Board: Generic ESP8285 Module
+- CPU Frequency: 80Mhz
+- Flash Size: 1M (64K SPIFFS)
+- Upload Speed: 115200
+- Port: Your FTDI COM Port
 
 As for the switch modifications, it's simply a matter of opening up the switch, installing a 4 or 5 pin header (depending on switch type) and then holding down the main switch on the unit before you power it up with your FTDI adapter. You are then good to go to re-flash your new firmware. The photo below is for illustration only and different products will require the same basic connection but headers will be located in different positions etc.
 
