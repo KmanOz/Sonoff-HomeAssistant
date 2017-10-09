@@ -68,6 +68,11 @@ Change the WIFI_SSID, WIFI_PASS, MQTT_CLIENT, MQTT_SERVER, MQTT_PORT, MQTT_USER,
 ```
 ## 4. Modify configuration.yaml in HomeAssistant and add the following to it.
 
+Add the following to the configuration.yaml to enable mqtt:
+``` bash
+mqtt:
+```
+
 ```bash
 switch:
   - platform: mqtt
