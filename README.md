@@ -1,4 +1,9 @@
-# Sonoff-HomeAssistant
+## THIS VERSION HAS NOW BEEN DEPRECIATED BUT WILL BE LEFT HERE FOR REFERENCE !!!!!
+
+
+Please use [KmanOz/KmanSonoff](https://github.com/KmanOz/KmanSonoff) from now on.
+
+## Sonoff-HomeAssistant
 
 ![](images/sonoff.png "Sonoff Range")
 
